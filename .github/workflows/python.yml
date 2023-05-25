@@ -34,3 +34,12 @@ jobs:
         run: |
           python openapi_main.py --schema_file "resources/openapi/openapi.yaml" --target_schema "User" --check_files "resources/json/test-openapi.json"
           python openapi_main.py --schema_file "resources/openapi/openapi.yaml" --target_schema "lunch" --check_files "resources/json/test-openapi-lunch.json"
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+      - run: composer install
+      - run: php check_main.php
