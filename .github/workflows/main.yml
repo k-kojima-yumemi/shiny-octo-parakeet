@@ -19,5 +19,9 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          role-session-name: samplerolesession
+          role-session-name: SampleRoleSession
           aws-region: ${{ secrets.AWS_REGION }}
+      - name: List S3 contents
+        run: aws s3 ls ${{ secrets.AWS_BUCKET_PATH }}
+      - name: Sync S3
+        run: aws s3 sync ./resources ${{ secrets.AWS_BUCKET_PATH }}
