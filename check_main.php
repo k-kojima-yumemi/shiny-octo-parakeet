@@ -19,14 +19,17 @@ function getSchema(string $fileName, ?string $target): array
         $yamlArray = Yaml::parseFile($fileName);
         if (basename($fileName) === "openapi.yaml") {
             if (empty($target)) {
-                throw new InvalidArgumentException("target must not be empty if you use openapi");
+                throw new InvalidArgumentException("target_schema must not be empty if you use openapi");
+            }
+            if (!isset($yamlArray["components"]["schemas"][$target])) {
+                throw new InvalidArgumentException("This schema doesn't have the target '$target'");
             }
             $content = $yamlArray["components"]["schemas"][$target];
         } else {
             $content = $yamlArray;
         }
     } else {
-        throw new AssertionError();
+        throw new InvalidArgumentException("The file type '$fileName' is not supported");
     }
     return $content;
 }
