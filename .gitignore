@@ -6,7 +6,9 @@
 !/test/**
 !/.gitignore
 !/*.py
+!/*.php
 !/*.json
 !/Makefile
 !/pyproject.toml
 !/requirements.txt
+!/composer.lock
