@@ -43,8 +43,8 @@ def main() -> None:
 
 
 def do_validation(
-        schema: dict,
-        contents: list[tuple[str, dict]],
+    schema: dict,
+    contents: list[tuple[str, dict]],
 ) -> list[tuple[str, jsonschema.exceptions.ValidationError]]:
     return validate_contents(schema, contents, validate=validate)
 
