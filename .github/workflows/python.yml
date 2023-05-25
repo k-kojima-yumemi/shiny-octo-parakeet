@@ -25,3 +25,12 @@ jobs:
         run: make mypy
       - name: test
         run: pytest
+      - name: Demo-JSON
+        run: python json_main.py --schema_file "resources/json-schema/regions.json" --check_files "resources/json/test-region.json"
+      - name: Demo-JSON-fail
+        run: |
+          ! python json_main.py --schema_file "resources/json-schema/regions.json" --check_files resources/json/*.json
+      - name: Demo-OpenAPI
+        run: |
+          python openapi_main.py --schema_file "resources/openapi/openapi.yaml" --target_schema "User" --check_files "resources/json/test-openapi.json"
+          python openapi_main.py --schema_file "resources/openapi/openapi.yaml" --target_schema "lunch" --check_files "resources/json/test-openapi-lunch.json"
