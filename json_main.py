@@ -6,7 +6,9 @@ from pathlib import Path
 import jsonschema
 from jsonschema import validate
 
-__all__ = ["validate_contents"]
+from common import load_jsons, validate_contents
+
+__all__ = ["do_validation"]
 
 
 def main() -> None:
@@ -30,14 +32,8 @@ def main() -> None:
     with schema_file.open() as f:
         schema = json.load(f)
         pass
-    content: list[tuple[str, dict]] = []
-    check_files: list[Path] = args.check_files
-    for check_file in check_files:
-        with check_file.open() as f:
-            j = json.load(f)
-            content.append((str(check_file), j))
-        pass
-    errors = validate_contents(schema, content)
+    content = load_jsons(args.check_files)
+    errors = do_validation(schema, content)
     if errors:
         # If any error happens
         for error_file, e in errors:
@@ -46,22 +42,11 @@ def main() -> None:
     return
 
 
-def validate_contents(
-    schema: dict, check_contents: list[tuple[str, dict]]
+def do_validation(
+        schema: dict,
+        contents: list[tuple[str, dict]],
 ) -> list[tuple[str, jsonschema.exceptions.ValidationError]]:
-    """
-    Validate all given files with the schema.
-    :param schema: Assumed to be valid schema
-    :param check_contents: tuple of file name and the json contents
-    :return: list of validation errors
-    """
-    errors: list[tuple[str, jsonschema.exceptions.ValidationError]] = []
-    for name, content in check_contents:
-        try:
-            validate(instance=content, schema=schema)
-        except jsonschema.exceptions.ValidationError as e:
-            errors.append((name, e))
-    return errors
+    return validate_contents(schema, contents, validate=validate)
 
 
 if __name__ == "__main__":
