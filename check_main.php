@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 require_once("vendor/autoload.php");
 
+use JsonSchema\Constraints\Constraint;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 
-function getSchema(string $fileName, ?string $target): object
+function getSchema(string $fileName, ?string $target): array
 {
     if (str_ends_with($fileName, ".json") || str_ends_with($fileName, ".yaml")) {
         // YAML or JSON file
         $yamlArray = Yaml::parseFile($fileName);
         if (basename($fileName) === "openapi.yaml") {
-            $content = array_to_object($yamlArray["components"]["schemas"][$target]);
+            $content = $yamlArray["components"]["schemas"][$target];
         } else {
-            $content = array_to_object($yamlArray);
+            $content = $yamlArray;
         }
     } else {
         throw new AssertionError();
@@ -26,10 +27,10 @@ function getSchema(string $fileName, ?string $target): object
     return $content;
 }
 
-function validate(object $schema, object $json, string $fileName): array
+function validate(array $schema, object $json, string $fileName): array
 {
     $validator = new JsonSchema\Validator();
-    $validator->validate($json, schema: $schema);
+    $validator->validate($json, schema: $schema, checkMode: Constraint::CHECK_MODE_TYPE_CAST);
     $error = $validator->getErrors();
     if (!empty($error)) {
         return [
