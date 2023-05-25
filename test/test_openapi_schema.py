@@ -27,10 +27,13 @@ def test_check_file() -> None:
     return
 
 
-@pytest.mark.parametrize("json_path, def_name, ", [
-    (content_success_path, "User"),
-    (content_success_path2, "lunch"),
-])
+@pytest.mark.parametrize(
+    "json_path, def_name, ",
+    [
+        (content_success_path, "User"),
+        (content_success_path2, "lunch"),
+    ],
+)
 def test_success(json_path: Path, def_name: str) -> None:
     schema = get_schema(schema_path, def_name)
     content = get_json(json_path)
@@ -51,10 +54,13 @@ def test_fail() -> None:
     return
 
 
-@pytest.mark.parametrize("def_name, ", [
-    "User",
-    "lunch",
-])
+@pytest.mark.parametrize(
+    "def_name, ",
+    [
+        "User",
+        "lunch",
+    ],
+)
 def test_fail_empty(def_name: str) -> None:
     schema = get_schema(schema_path, def_name)
     path = content_empty_path
@@ -67,10 +73,13 @@ def test_fail_empty(def_name: str) -> None:
     return
 
 
-@pytest.mark.parametrize("json_path, def_name, ", [
-    (content_success_path, "lunch"),
-    (content_success_path2, "User"),
-])
+@pytest.mark.parametrize(
+    "json_path, def_name, ",
+    [
+        (content_success_path, "lunch"),
+        (content_success_path2, "User"),
+    ],
+)
 def test_fail_wrong_definition(json_path: Path, def_name: str) -> None:
     schema = get_schema(schema_path, def_name)
     content = get_json(json_path)
