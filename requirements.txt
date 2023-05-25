@@ -1,0 +1,9 @@
+jsonschema ~= 4.17
+openapi-schema-validator ~= 0.4
+# Linters
+pytest ~= 7.2
+black ~= 23.1
+isort ~= 5.12
+pyproject-flake8 ~= 6.0
+mypy ~= 1.3
+types-jsonschema ~= 4.17

@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "required": [
+    "regions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "region_name",
+          "selected_region",
+          "countries"
+        ],
+        "properties": {
+          "region_name": {
+            "type": "string"
+          },
+          "selected_region": {
+            "type": "string"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "country_name",
+                "app_country_code",
+                "domain",
+                "languages"
+              ],
+              "properties": {
+                "country_name": {
+                  "type": "string"
+                },
+                "app_country_code": {
+                  "type": "string"
+                },
+                "domain": {
+                  "type": "string"
+                },
+                "languages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "language_name": {
+                        "type": "string"
+                      },
+                      "app_language_code": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

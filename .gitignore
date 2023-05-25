@@ -1,0 +1,10 @@
+*
+
+!/resources
+!/resources/**
+!/.gitignore
+!/*.py
+!/*.json
+!/Makefile
+!/pyproject.toml
+!/requirements.txt

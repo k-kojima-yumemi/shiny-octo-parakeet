@@ -1,0 +1,25 @@
+{
+  "regions": [
+    {
+      "region_name": "Asia",
+      "selected_region": "Asia",
+      "countries": [
+        {
+          "country_name": "Japan",
+          "app_country_code": "jp",
+          "domain": "www.google.co.jp",
+          "languages": [
+            {
+              "language_name": "Japanese",
+              "app_language_code": "ja-jp"
+            },
+            {
+              "language_name": "English",
+              "app_language_code": "en-jp"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
