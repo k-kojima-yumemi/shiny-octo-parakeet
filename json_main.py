@@ -28,7 +28,14 @@ def main() -> None:
     with schema_file.open() as f:
         schema = json.load(f)
         pass
-    errors = validate_files(schema, args.check_files)
+    content: list[tuple[str, dict]] = []
+    check_files: list[Path] = args.check_files
+    for check_file in check_files:
+        with check_file.open() as f:
+            j = json.load(f)
+            content.append((str(check_file), j))
+        pass
+    errors = validate_files(schema, content)
     if errors:
         # If any error happens
         for error_file, e in errors:
@@ -38,23 +45,20 @@ def main() -> None:
 
 
 def validate_files(
-    schema: dict, check_files: list[Path]
-) -> list[tuple[Path, jsonschema.exceptions.ValidationError]]:
+    schema: dict, check_contents: list[tuple[str, dict]]
+) -> list[tuple[str, jsonschema.exceptions.ValidationError]]:
     """
     Validate all given files with the schema.
     :param schema: Assumed to be valid schema
-    :param check_files: Assumed all files in this list exist
+    :param check_contents: tuple of file name and the json contents
     :return: list of validation errors
     """
-    errors: list[tuple[Path, jsonschema.exceptions.ValidationError]] = []
-    for check_file in check_files:
-        with check_file.open() as f:
-            content = json.load(f)
-            pass
+    errors: list[tuple[str, jsonschema.exceptions.ValidationError]] = []
+    for name, content in check_contents:
         try:
             validate(instance=content, schema=schema)
         except jsonschema.exceptions.ValidationError as e:
-            errors.append((check_file, e))
+            errors.append((name, e))
     return errors
 
 
