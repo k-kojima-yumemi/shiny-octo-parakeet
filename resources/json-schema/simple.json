@@ -1,5 +1,9 @@
 {
   "type": "object",
+  "required": [
+    "price",
+    "name"
+  ],
   "properties": {
     "price": {
       "type": "integer"

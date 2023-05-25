@@ -42,4 +42,11 @@ jobs:
         with:
           php-version: '8.1'
       - run: composer install
-      - run: php check_main.php
+      - name: Demo-Success
+        run: php check_main.php lint "resources/json-schema/simple.json" "resources/json/test-simple.json"
+      - name: Demo-fail1
+        run: |
+          ! php check_main.php lint "resources/json-schema/simple.json" "resources/json/empty.json"
+      - name: Demo-JSON-fail2
+        run: |
+          ! php check_main.php lint "resources/json-schema/regions.json" "resources/json/test-region-no-area.json"
