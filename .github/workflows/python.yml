@@ -50,3 +50,9 @@ jobs:
       - name: Demo-JSON-fail2
         run: |
           ! php check_main.php lint "resources/json-schema/regions.json" resources/json/*.json
+      - name: Demo-OpenAPI1
+        run: php check_main.php lint resources/openapi/openapi.yaml resources/json/test-openapi.json -t User
+      - name: Demo-OpenAPI2
+        run: php check_main.php lint resources/openapi/openapi.yaml resources/json/test-openapi-lunch.json -t lunch
+      - name: Demo-OpenAPI-fail1
+        run: ! php check_main.php lint resources/openapi/openapi.yaml resources/json/test-openapi.json -t kunch
