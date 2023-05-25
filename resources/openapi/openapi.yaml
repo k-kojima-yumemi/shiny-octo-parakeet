@@ -93,3 +93,26 @@ components:
         updated_at:
           type: string
           format: date-time
+    lunch:
+      type: object
+      additionalProperties: false
+      required:
+        - food
+        - time
+      properties:
+        food:
+          type: array
+          items:
+            type: object
+            required:
+              - price
+              - name
+            properties:
+              price:
+                type: integer
+                minimum: 0
+              name:
+                type: string
+        time:
+          type: string
+          format: date-time
