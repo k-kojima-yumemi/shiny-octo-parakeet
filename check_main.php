@@ -18,6 +18,9 @@ function getSchema(string $fileName, ?string $target): array
         // YAML or JSON file
         $yamlArray = Yaml::parseFile($fileName);
         if (basename($fileName) === "openapi.yaml") {
+            if (empty($target)) {
+                throw new InvalidArgumentException("target must not be empty if you use openapi");
+            }
             $content = $yamlArray["components"]["schemas"][$target];
         } else {
             $content = $yamlArray;
@@ -67,8 +70,8 @@ function main(OutputInterface $output, string $schemaFileName, array $jsonFileNa
 $application = new Application();
 $application
     ->register("lint")
-    ->addArgument("schema_file",  InputArgument::REQUIRED, "Location of schema JSON/yaml")
-    ->addArgument("check_files",  InputArgument::REQUIRED | InputArgument::IS_ARRAY, "Space separated files")
+    ->addArgument("schema_file", InputArgument::REQUIRED, "Location of schema JSON/yaml")
+    ->addArgument("check_files", InputArgument::REQUIRED | InputArgument::IS_ARRAY, "Space separated files")
     ->addOption("target_schema", "t", InputOption::VALUE_OPTIONAL, "target schema in openapi.yaml", null)
     ->setCode(function (InputInterface $input, OutputInterface $output): int {
         $target = $input->getOption("target_schema");
