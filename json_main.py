@@ -6,6 +6,8 @@ from pathlib import Path
 import jsonschema
 from jsonschema import validate
 
+__all__ = ["validate_contents"]
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -35,7 +37,7 @@ def main() -> None:
             j = json.load(f)
             content.append((str(check_file), j))
         pass
-    errors = validate_files(schema, content)
+    errors = validate_contents(schema, content)
     if errors:
         # If any error happens
         for error_file, e in errors:
@@ -44,7 +46,7 @@ def main() -> None:
     return
 
 
-def validate_files(
+def validate_contents(
     schema: dict, check_contents: list[tuple[str, dict]]
 ) -> list[tuple[str, jsonschema.exceptions.ValidationError]]:
     """
