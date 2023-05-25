@@ -6,6 +6,7 @@ require_once("vendor/autoload.php");
 
 use JsonSchema\Constraints\Constraint;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,14 +42,23 @@ function validate(array $schema, object $json, string $fileName): array
     }
 }
 
-function main(OutputInterface $output, string $schemaFileName, string $jsonFileName, ?string $target = null): int
+function main(OutputInterface $output, string $schemaFileName, array $jsonFileNames, ?string $target = null): int
 {
-    $output->writeln("Start main");
+    $output->writeln(["Start main",]);
     $schema = getSchema($schemaFileName, $target);
-    $json = json_decode(file_get_contents($jsonFileName));
-    $error = validate($schema, $json, $jsonFileName);
-    foreach ($error as $e) {
-        $output->writeln(print_r($e, return: true));
+    $errors = [];
+    foreach ($jsonFileNames as $jsonFileName) {
+        $output->writeln(["Loading " . $jsonFileName]);
+        $json = json_decode(file_get_contents($jsonFileName));
+        $errors = array_merge($errors, validate($schema, $json, $jsonFileName));
+    }
+    $output->writeln([str_repeat("=", 20)]);
+    foreach ($errors as $name => $e) {
+        $output->writeln([
+            $name,
+            print_r($e, return: true),
+            str_repeat("=", 20),
+        ]);
     }
     $output->writeln("End main");
     return empty($error) ? 0 : 1;
@@ -57,15 +67,15 @@ function main(OutputInterface $output, string $schemaFileName, string $jsonFileN
 $application = new Application();
 $application
     ->register("lint")
-    ->addArgument("schema_file", InputOption::VALUE_REQUIRED)
-    ->addArgument("check_files", InputOption::VALUE_REQUIRED)
-    ->addArgument("target_schema", InputOption::VALUE_OPTIONAL)
+    ->addArgument("schema_file",  InputArgument::REQUIRED, "Location of schema JSON/yaml")
+    ->addArgument("check_files",  InputArgument::REQUIRED | InputArgument::IS_ARRAY, "Space separated files")
+    ->addOption("target_schema", "t", InputOption::VALUE_OPTIONAL, "target schema in openapi.yaml", null)
     ->setCode(function (InputInterface $input, OutputInterface $output): int {
-        $target = $input->getArgument("target_schema");
+        $target = $input->getOption("target_schema");
         return main(
             output: $output,
             schemaFileName: $input->getArgument("schema_file"),
-            jsonFileName: $input->getArgument("check_files"),
+            jsonFileNames: $input->getArgument("check_files"),
             target: empty($target) ? null : $target,
         );
     });

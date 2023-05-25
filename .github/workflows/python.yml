@@ -46,7 +46,7 @@ jobs:
         run: php check_main.php lint "resources/json-schema/simple.json" "resources/json/test-simple.json"
       - name: Demo-fail1
         run: |
-          ! php check_main.php lint "resources/json-schema/simple.json" "resources/json/empty.json"
+          ! php check_main.php lint "resources/json-schema/simple.json" resources/json/*.json
       - name: Demo-JSON-fail2
         run: |
-          ! php check_main.php lint "resources/json-schema/regions.json" "resources/json/test-region-no-area.json"
+          ! php check_main.php lint "resources/json-schema/regions.json" resources/json/*.json
