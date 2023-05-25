@@ -2,6 +2,8 @@
 
 !/resources
 !/resources/**
+!/test
+!/test/**
 !/.gitignore
 !/*.py
 !/*.json
