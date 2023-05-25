@@ -61,7 +61,7 @@ function main(OutputInterface $output, string $schemaFileName, array $jsonFileNa
         ]);
     }
     $output->writeln("End main");
-    return empty($error) ? 0 : 1;
+    return empty($errors) ? 0 : 1;
 }
 
 $application = new Application();
