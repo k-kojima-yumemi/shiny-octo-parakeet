@@ -41,12 +41,6 @@ function validate(array $schema, object $json, string $fileName): array
     }
 }
 
-function array_to_object($array)
-{
-    $json_str = json_encode($array);
-    return json_decode($json_str);
-}
-
 function main(OutputInterface $output, string $schemaFileName, string $jsonFileName, ?string $target = null): int
 {
     $output->writeln("Start main");
