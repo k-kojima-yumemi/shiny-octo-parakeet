@@ -65,4 +65,4 @@ jobs:
       - name: Show event
         run: echo $context
         env:
-          context: ${{fromJson(github.event)}}
+          context: ${{toJson(github.event)}}
