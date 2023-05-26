@@ -76,3 +76,5 @@ jobs:
       - name: Check log
         run: |
           git diff ${{github.event.before}}..${{github.event.after}}
+      - name: Check modified files
+        run: git diff ${{github.event.before}}..${{github.event.after}} --name-only
