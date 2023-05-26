@@ -75,4 +75,4 @@ jobs:
           fetch-depth: 0
       - name: Check log
         run: |
-          git diff ${{github.event.before}}..${{github.event.after}}"
+          git diff ${{github.event.before}}..${{github.event.after}}
