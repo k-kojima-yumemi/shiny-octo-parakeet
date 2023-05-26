@@ -12,3 +12,5 @@
 !/pyproject.toml
 !/requirements.txt
 !/composer.lock
+!/.github
+!/.github/**
