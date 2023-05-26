@@ -63,6 +63,6 @@ jobs:
     timeout-minutes: 3
     steps:
       - name: Show event
-        run: echo $context
+        run: echo $context | jq
         env:
           context: ${{toJson(github.event)}}
