@@ -1,52 +1,10 @@
-openapi: 3.0.3
+openapi: "3.1.0"
 info:
   title: Example API
   description: Sample from https://zenn.dev/peraichi_blog/articles/01ges56ak79g2rket9wm27w9pc
   version: 1.0.0
 servers:
   - url: 'http://localhost:8080'
-    description: 開発環境
-paths:
-  '/api/v1/users/{user_id}':
-    get:
-      description: ユーザ詳細
-      operationId: UserShow
-      parameters:
-        - $ref: '#/components/parameters/PathUserId'
-      responses:
-        '200':
-          description: 成功時
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-    put:
-      description: ユーザ更新
-      operationId: UserUpdate
-      parameters:
-        - $ref: '#/components/parameters/PathUserId'
-      requestBody:
-        $ref: '#/components/requestBodies/User'
-      responses:
-        '200':
-          description: 成功時
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-  '/api/v1/users':                               # POSTを追加でもシンプルに書けます
-    post:
-      description: ユーザ作成
-      operationId: UserCreate
-      requestBody:
-        $ref: '#/components/requestBodies/User'
-      responses:
-        '200':
-          description: 成功時
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
 components:
   parameters:
     PathUserId:
