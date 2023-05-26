@@ -57,4 +57,12 @@ jobs:
       - name: Demo-OpenAPI-fail1
         run: |
           ! php check_main.php lint resources/openapi/openapi.yaml resources/json/test-openapi.json -t lunch
-      
+
+  check-updated_files:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Show event
+        run: echo $context
+        env:
+          context: ${{fromJson(github.event)}}
