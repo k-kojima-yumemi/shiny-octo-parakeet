@@ -66,3 +66,13 @@ jobs:
         run: echo $context | jq
         env:
           context: ${{toJson(github.event)}}
+      - name: Before and After
+        run: |
+          echo "Before: ${{github.event.before}}"
+          echo "After: ${{github.event.after}}"
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Check log
+        run: |
+          git diff ${{github.event.before}}..${{github.event.after}}"
