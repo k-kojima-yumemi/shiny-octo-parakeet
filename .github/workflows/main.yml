@@ -24,6 +24,6 @@ jobs:
           role-session-name: SampleRoleSession
           aws-region: ${{ secrets.AWS_REGION }}
       - name: List S3 contents
-        run: aws s3 ls ${{ secrets.AWS_BUCKET_PATH }}
+        run: aws s3 ls ${{ secrets.AWS_BUCKET_PATH }} --recursive --human-readable --summarize
       - name: Sync S3
         run: aws s3 sync --delete ./resources ${{ secrets.AWS_BUCKET_PATH }}
