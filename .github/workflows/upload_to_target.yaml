@@ -33,6 +33,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validation]
     if: ${{ needs.validation.outputs.result == 'true' }}
+    env:
+      DELETE_ARG: ${{ inputs.delete_files == 'true' && '--delete' || '' }}
     steps:
       - name: Check target environment
         id: target
@@ -58,4 +60,4 @@ jobs:
               steps.target.outputs.target == 'prod' && 'PROD_ROLE'
             }}
       - name: Sync
-        run: echo "Hello ${{ (github.event_name != 'push' && fromJson(inputs.delete_files)) && '--delete' || '' }}"
+        run: echo "Hello ${{ env.DELETE_ARG }}"
