@@ -39,7 +39,8 @@
                   "type": "string"
                 },
                 "app_country_code": {
-                  "type": "string"
+                  "type": "string",
+                  "pattern": "[a-z]{2}"
                 },
                 "domain": {
                   "type": "string"
