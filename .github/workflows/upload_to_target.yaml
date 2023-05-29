@@ -34,7 +34,7 @@ jobs:
     needs: [validation]
     if: ${{ needs.validation.outputs.result == 'true' }}
     env:
-      DELETE_ARG: ${{ inputs.delete_files == 'true' && '--delete' || '' }}
+      DELETE_ARG: ${{ (github.event_name != 'push' && fromJson(inputs.delete_files)) && '--delete' || '' }}
     steps:
       - name: Check target environment
         id: target
