@@ -34,7 +34,7 @@ jobs:
     needs: [validation]
     if: ${{ needs.validation.outputs.result == 'true' }}
     env:
-      DELETE_ARG: ${{ (github.event_name != 'push' && fromJson(inputs.delete_files)) && '--delete' || '' }}
+      DELETE_ARG: ${{ (github.event_name != 'push' && fromJson(inputs.delete_files)) && '-n' || '' }}
     steps:
       - name: Check target environment
         id: target
@@ -60,4 +60,6 @@ jobs:
               steps.target.outputs.target == 'prod' && 'PROD_ROLE'
             }}
       - name: Sync
-        run: echo "Hello ${{ env.DELETE_ARG }}"
+        run: | 
+          echo ${{ env.DELETE_ARG }} "Hello world: "
+          echo "New Line!"
