@@ -14,6 +14,10 @@ on:
           - dev
           - stg
           - prod
+      delete_files:
+        description: 'Delete files in sync'
+        type: boolean
+        default: false
 
 jobs:
   validation:
@@ -53,3 +57,5 @@ jobs:
               steps.target.outputs.target == 'stg' && 'STG_ROLE' ||
               steps.target.outputs.target == 'prod' && 'PROD_ROLE'
             }}
+      - name: Sync
+        run: echo "Hello ${{ fromJson(inputs.delete_files) && '--delete' || '' }}"
