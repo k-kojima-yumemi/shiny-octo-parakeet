@@ -38,5 +38,18 @@ jobs:
               github.event_name == 'push' && 'dev' || 
               inputs.target
             }}
-        run:
+        run: |
           echo "$TARGET"
+          echo "target=$TARGET" >> "$GITHUB_OUTPUT"
+      - name: Login to AWS
+        run: echo "${role_to_assume}"
+        env:
+          # This entries must be replaced. "with", underlines to hyphen
+          role_session_name: SampleRoleSession
+          aws_region: ap-northeast-1
+          role_to_assume: >-
+            ${{ 
+              steps.target.outputs.target == 'dev' && 'DEV_ROLE' ||
+              steps.target.outputs.target == 'stg' && 'STG_ROLE' ||
+              steps.target.outputs.target == 'prod' && 'PROD_ROLE'
+            }}
