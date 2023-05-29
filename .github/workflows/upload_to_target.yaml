@@ -58,4 +58,4 @@ jobs:
               steps.target.outputs.target == 'prod' && 'PROD_ROLE'
             }}
       - name: Sync
-        run: echo "Hello ${{ fromJson(inputs.delete_files) && '--delete' || '' }}"
+        run: echo "Hello ${{ (github.event_name != 'push' && fromJson(inputs.delete_files)) && '--delete' || '' }}"
