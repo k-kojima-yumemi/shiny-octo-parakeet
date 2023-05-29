@@ -28,7 +28,7 @@ jobs:
   upload:
     runs-on: ubuntu-latest
     needs: [validation]
-    if: ${{ toJson(needs.validation.outputs.result) == true }}
+    if: ${{ needs.validation.outputs.result == 'true' }}
     steps:
       - name: Check target environment
         id: target
