@@ -1,0 +1,76 @@
+name: Upload Country JSON to S3
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      target: 
+        description: 'Target Environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - stg
+          - prod
+      delete_files:
+        description: 'Delete files in sync'
+        type: boolean
+        default: false
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    outputs:
+      target: ${{steps.target.outputs.target}}
+    steps:
+      - name: Do validation
+        run: echo "Validation Passed!"
+      - name: Check target environment
+        id: target
+        env:
+          TARGET: >-
+            ${{
+              github.event_name == 'push' && 'dev' || 
+              inputs.target
+            }}
+        run: |
+          echo "$TARGET"
+          echo "target=$TARGET" >> "$GITHUB_OUTPUT"
+
+  upload:
+    runs-on: ubuntu-latest
+    needs: [validation]
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        country: [jp, sg, my, th, kr]
+    environment: ${{matrix.country}}
+    env:
+      S3_DESTINATION: >-
+        s3://my-env-${{needs.validation.outputs.target}}-${{
+          matrix.country != 'jp' && format('{0}-', matrix.country) || ''
+        }}test
+      DELETE_ARG: ${{ (github.event_name != 'push' && fromJson(inputs.delete_files)) && '-n' || '' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check Destination ${{env.S3_DESTINATION}}
+        run: echo "${S3_DESTINATION}"
+      - name: Login to AWS
+        run: |
+          echo "Role: $role_to_assume"
+          echo "Region: $aws_region"
+        env:
+          role_session_name: UploadContentSession
+          aws_region: ${{vars.ENV_REGION}}
+          role_to_assume: >-
+            ${{
+              needs.validation.outputs.target == 'dev' && 'DEV_ROLE' ||
+              needs.validation.outputs.target == 'stg' && 'STG_ROLE' ||
+              needs.validation.outputs.target == 'prod' && 'PROD_ROLE'
+            }}
+      - name: Upload App Config
+        run: |
+          echo ${{ env.DELETE_ARG }} "Upload config to S3!"
+          echo "New line"
