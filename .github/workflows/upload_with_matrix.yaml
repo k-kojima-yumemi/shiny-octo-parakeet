@@ -45,7 +45,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        country: [jp, sg, my, th, kr]
+        country: [jp, sg, my, th, kr, de]
     environment: ${{matrix.country}}
     env:
       S3_DESTINATION: >-
