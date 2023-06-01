@@ -27,3 +27,5 @@ jobs:
         run: aws s3 ls ${{ secrets.AWS_BUCKET_PATH }} --recursive --human-readable --summarize
       - name: Sync S3
         run: aws s3 sync --delete ./resources ${{ secrets.AWS_BUCKET_PATH }}
+      - name: Sync S3 2
+        run: aws s3 sync --delete ./resources ${{ secrets.AWS_BUCKET_PATH }}new_dir/
