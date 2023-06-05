@@ -70,7 +70,14 @@ jobs:
     timeout-minutes: 3
     needs: [validation, upload]
     steps:
+      - name: Create message
+        env:
+          NEED_CONTEXT: ${{toJson(needs)}}
+        run: |
+          status=$(echo "${NEED_CONTEXT}" | jq 'if ([.. | .result? | strings] | all(. == "success")) then "Success" else "Fail" end')
+          echo $status
       - uses: hkusu/slack-post-action@v1
+        if: false
         env:
           SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
         with:

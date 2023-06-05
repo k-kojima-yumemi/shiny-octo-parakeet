@@ -57,6 +57,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Check Destination ${{env.S3_DESTINATION}}
         run: echo "${S3_DESTINATION}"
+      - run: false
+        if: matrix.country == 'th'
       - name: Login to AWS
         run: |
           echo "Role: $role_to_assume"
@@ -78,12 +80,24 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     needs: [validation, upload]
+    if: always()
     steps:
-      - id: format_target
+      - name: Create message
+        id: format_message
+        env:
+          NEED_CONTEXT: ${{toJson(needs)}}
+        run: |
+          status=$(echo "${NEED_CONTEXT}" | jq 'if ([.. | .result? | strings] | all(. == "success")) then "Success" else "Fail" end')
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+      - name: Format
+        id: format_target
         run: |
           a='${{vars.TARGETS}}'
           echo "target_names=${a//\"/}" >> "$GITHUB_OUTPUT"
+      - name: Notice
+        run: echo "Status ${{steps.format_message.outputs.status}}, Targets ${{steps.format_target.outputs.target_names}}"
       - uses: hkusu/slack-post-action@v1
+        if: false
         env:
           SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
         with:
@@ -99,51 +113,6 @@ jobs:
               { 
                 "title": "Status",
                 "value": "Success",
-                "short": true
-              },
-              {
-                "title": "Workflow",
-                "value": "${{github.workflow}}",
-                "short": true
-              },
-              {
-                "title": "Targets",
-                "value": "${{steps.format_target.outputs.target_names}}",
-                "short": true
-              }
-            ]
-
-  notification-fail:
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    if: failure()
-    needs: [validation, upload]
-    steps:
-      - id: format_target
-        run: |
-          a='${{vars.TARGETS}}'
-          echo "target_names=${a//\"/}" >> "$GITHUB_OUTPUT"
-      - uses: hkusu/slack-post-action@v1
-        env:
-          SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
-          TARGET: >-
-            ${{
-              github.event_name == 'push' && 'dev' || 
-              inputs.target
-            }}
-        with:
-          channel: ${{secrets.SLACK_CHANNEL_ID}}
-          message: '`${{env.TARGET}}` ${{github.workflow}}'
-          user-name: 'GitHub Actions'
-          user-icon: 'https://github.com/github.png?size=48'
-          color: 'danger'
-          log-button: 'View log'
-          report-sha: ${{github.sha}}
-          fields: |
-            [
-              { 
-                "title": "Status",
-                "value": "Failed!",
                 "short": true
               },
               {
