@@ -45,7 +45,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        country: [jp, sg, my, th, kr, de]
+        country: ${{fromJson(vars.TARGETS)}}
     environment: ${{matrix.country}}
     env:
       S3_DESTINATION: >-
@@ -86,12 +86,30 @@ jobs:
           SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
         with:
           channel: ${{secrets.SLACK_CHANNEL_ID}}
-          message: '`${{needs.upload.outputs.target}}` Success! ${{github.workflow}}'
+          message: '`${{needs.upload.outputs.target}}` ${{github.workflow}}'
           user-name: 'GitHub Actions'
           user-icon: 'https://github.com/github.png?size=48'
           color: 'good'
           log-button: 'View log'
           report-sha: ${{github.sha}}
+          fields: |
+            [
+              { 
+                "title": "Status",
+                "value": "Success",
+                "short": true
+              },
+              {
+                "title": "Workflow",
+                "value": "${{github.workflow}}",
+                "short": true
+              },
+              {
+                "title": "Targets",
+                "value": "${{vars.TARGETS}}",
+                "short": true
+              }
+            ]
 
   notification-fail:
     runs-on: ubuntu-latest
@@ -109,9 +127,27 @@ jobs:
             }}
         with:
           channel: ${{secrets.SLACK_CHANNEL_ID}}
-          message: '`${{env.TARGET}}` **Failed!** ${{github.workflow}}'
+          message: '`${{env.TARGET}}` ${{github.workflow}}'
           user-name: 'GitHub Actions'
           user-icon: 'https://github.com/github.png?size=48'
           color: 'danger'
           log-button: 'View log'
           report-sha: ${{github.sha}}
+          fields: |
+            [
+              { 
+                "title": "Status",
+                "value": "*Failed!*",
+                "short": true
+              },
+              {
+                "title": "Workflow",
+                "value": "${{github.workflow}}",
+                "short": true
+              },
+              {
+                "title": "Targets",
+                "value": "${{vars.TARGETS}}",
+                "short": true
+              }
+            ]

@@ -75,9 +75,27 @@ jobs:
           SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
         with:
           channel: ${{secrets.SLACK_CHANNEL_ID}}
-          message: '`${{needs.upload.outputs.target}}` Success! ${{github.workflow}}'
+          message: '`${{needs.upload.outputs.target}}` ${{github.workflow}}'
           user-name: 'GitHub Actions'
           user-icon: 'https://github.com/github.png?size=48'
           color: 'good'
           log-button: 'View log'
           report-sha: ${{github.sha}}
+          fields: |
+            [
+              { 
+                "title": "Status",
+                "value": "Success",
+                "short": true
+              },
+              {
+                "title": "Workflow",
+                "value": "${{github.workflow}}",
+                "short": true
+              },
+              {
+                "title": "Targets",
+                "value": "jp",
+                "short": true
+              }
+            ]
