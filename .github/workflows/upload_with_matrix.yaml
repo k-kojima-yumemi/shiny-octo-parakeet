@@ -55,6 +55,8 @@ jobs:
       DELETE_ARG: ${{ (github.event_name != 'push' && fromJson(inputs.delete_files)) && '-n' || '' }}
     steps:
       - uses: actions/checkout@v3
+      - name: Fail
+        run: false
       - name: Check Destination ${{env.S3_DESTINATION}}
         run: echo "${S3_DESTINATION}"
       - name: Login to AWS
@@ -74,3 +76,42 @@ jobs:
         run: |
           echo ${{ env.DELETE_ARG }} "Upload config to S3!"
           echo "New line"
+  notification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    needs: [validation, upload]
+    steps:
+      - uses: hkusu/slack-post-action@v1
+        env:
+          SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
+        with:
+          channel: ${{secrets.SLACK_CHANNEL_ID}}
+          message: 'Success! ${{github.workflow}} ${{needs.upload.outputs.target}}'
+          user-name: 'GitHub Actions'
+          user-icon: 'https://github.com/github.png?size=48'
+          color: 'good'
+          log-button: 'View log'
+          report-sha: ${{github.sha}}
+
+  notification-fail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    if: failure()
+    needs: [validation, upload]
+    steps:
+      - uses: hkusu/slack-post-action@v1
+        env:
+          SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
+          TARGET: >-
+            ${{
+              github.event_name == 'push' && 'dev' || 
+              inputs.target
+            }}
+        with:
+          channel: ${{secrets.SLACK_CHANNEL_ID}}
+          message: 'Failed! ${{github.workflow}} ${{env.TARGET}}'
+          user-name: 'GitHub Actions'
+          user-icon: 'https://github.com/github.png?size=48'
+          color: 'danger'
+          log-button: 'View log'
+          report-sha: ${{github.sha}}
