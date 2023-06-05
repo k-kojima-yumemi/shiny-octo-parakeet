@@ -74,7 +74,7 @@ jobs:
         env:
           NEED_CONTEXT: ${{toJson(needs)}}
         run: |
-          status=$(echo "${NEED_CONTEXT}" | jq 'if ([.. | .result? | strings] | all(. == "success")) then "Success" else "Fail" end')
+          status=$(echo "${NEED_CONTEXT}" | jq 'if ([to_entries | .[] | .value | .result ] | all(. == "success")) then "Success" else "Fail" end')
           echo $status
       - uses: hkusu/slack-post-action@v1
         if: false
