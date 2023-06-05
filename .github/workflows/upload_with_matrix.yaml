@@ -86,7 +86,7 @@ jobs:
           SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
         with:
           channel: ${{secrets.SLACK_CHANNEL_ID}}
-          message: 'Success! ${{github.workflow}} ${{needs.upload.outputs.target}}'
+          message: '`${{needs.upload.outputs.target}}` Success! ${{github.workflow}}'
           user-name: 'GitHub Actions'
           user-icon: 'https://github.com/github.png?size=48'
           color: 'good'
@@ -109,7 +109,7 @@ jobs:
             }}
         with:
           channel: ${{secrets.SLACK_CHANNEL_ID}}
-          message: 'Failed! ${{github.workflow}} ${{env.TARGET}}'
+          message: '`${{env.TARGET}}` **Failed!** ${{github.workflow}}'
           user-name: 'GitHub Actions'
           user-icon: 'https://github.com/github.png?size=48'
           color: 'danger'
