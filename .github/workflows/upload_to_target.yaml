@@ -35,6 +35,8 @@ jobs:
     if: ${{ needs.validation.outputs.result == 'true' }}
     env:
       DELETE_ARG: ${{ (github.event_name != 'push' && fromJson(inputs.delete_files)) && '-n' || '' }}
+    outputs:
+      target: ${{steps.target.outputs.target}}
     steps:
       - name: Check target environment
         id: target
@@ -63,3 +65,18 @@ jobs:
         run: | 
           echo ${{ env.DELETE_ARG }} "Hello world: "
           echo "New Line!"
+  notification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    needs: [validation, upload]
+    steps:
+      - uses: hkusu/slack-post-action@v1
+        env:
+          SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
+        with:
+          channel: ${{secrets.SLACK_CHANNEL_ID}}
+          message: 'Hello World! ${{needs.upload.outputs.target}}'
+          user-name: 'GitHub Actions'
+          user-icon: 'https://github.com/actions.png?size=48'
+          color: 'good'
+          log-button: 'View log'
