@@ -71,11 +71,16 @@ jobs:
     needs: [validation, upload]
     steps:
       - name: Create message
+        id: format_message
         env:
           NEED_CONTEXT: ${{toJson(needs)}}
         run: |
-          status=$(echo "${NEED_CONTEXT}" | jq 'if ([to_entries | .[] | .value | .result ] | all(. == "success")) then "Success" else "Fail" end')
+          status=$(echo "${NEED_CONTEXT}" | jq '[to_entries | .[] | .value | .result ] | all(. == "success"')
           echo $status
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+      - name: Out
+        run: |
+          echo ${{fromJson(steps.format_message.outputs.status) && 'Success' || 'Fail'}}
       - uses: hkusu/slack-post-action@v1
         if: false
         env:

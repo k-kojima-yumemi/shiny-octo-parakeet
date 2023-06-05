@@ -87,7 +87,7 @@ jobs:
         env:
           NEED_CONTEXT: ${{toJson(needs)}}
         run: |
-          status=$(echo "${NEED_CONTEXT}" | jq 'if ([to_entries | .[] | .value | .result ] | all(. == "success")) then "Success" else "Fail" end')
+          status=$(echo "${NEED_CONTEXT}" | jq '[to_entries | .[] | .value | .result ] | all(. == "success"')
           echo "status=${status}" >> "$GITHUB_OUTPUT"
       - name: Format
         id: format_target
@@ -95,7 +95,7 @@ jobs:
           a='${{vars.TARGETS}}'
           echo "target_names=${a//\"/}" >> "$GITHUB_OUTPUT"
       - name: Notice
-        run: echo "Status ${{steps.format_message.outputs.status}}, Targets ${{steps.format_target.outputs.target_names}}"
+        run: echo "Status ${{fromJson(steps.format_message.outputs.status) && 'Success' || 'Fail' }}, Targets ${{steps.format_target.outputs.target_names}}"
       - uses: hkusu/slack-post-action@v1
         if: false
         env:
