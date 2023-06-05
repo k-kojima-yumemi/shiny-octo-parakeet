@@ -75,7 +75,7 @@ jobs:
         env:
           NEED_CONTEXT: ${{toJson(needs)}}
         run: |
-          status=$(echo "${NEED_CONTEXT}" | jq '[to_entries | .[] | .value | .result ] | all(. == "success"')
+          status=$(echo "${NEED_CONTEXT}" | jq '[to_entries | .[] | .value | .result ] | all(. == "success")')
           echo $status
           echo "status=${status}" >> "$GITHUB_OUTPUT"
       - name: Out
