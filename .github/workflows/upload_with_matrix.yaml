@@ -81,6 +81,10 @@ jobs:
     timeout-minutes: 3
     needs: [validation, upload]
     steps:
+      - id: format_target
+        run: |
+          a='${{vars.TARGETS}}'
+          echo "target_names=${a//\"/}" >> "$GITHUB_OUTPUT"
       - uses: hkusu/slack-post-action@v1
         env:
           SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
@@ -106,7 +110,7 @@ jobs:
               },
               {
                 "title": "Targets",
-                "value": "${{vars.TARGETS}}",
+                "value": "${{steps.format_target.outputs.target_names}}",
                 "short": true
               }
             ]
@@ -117,6 +121,10 @@ jobs:
     if: failure()
     needs: [validation, upload]
     steps:
+      - id: format_target
+        run: |
+          a='${{vars.TARGETS}}'
+          echo "target_names=${a//\"/}" >> "$GITHUB_OUTPUT"
       - uses: hkusu/slack-post-action@v1
         env:
           SLACK_APP_TOKEN: ${{secrets.SLACK_TOKEN}}
@@ -147,7 +155,7 @@ jobs:
               },
               {
                 "title": "Targets",
-                "value": "${{vars.TARGETS}}",
+                "value": "${{steps.format_target.outputs.target_names}}",
                 "short": true
               }
             ]
