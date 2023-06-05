@@ -55,8 +55,6 @@ jobs:
       DELETE_ARG: ${{ (github.event_name != 'push' && fromJson(inputs.delete_files)) && '-n' || '' }}
     steps:
       - uses: actions/checkout@v3
-      - name: Fail
-        run: false
       - name: Check Destination ${{env.S3_DESTINATION}}
         run: echo "${S3_DESTINATION}"
       - name: Login to AWS
@@ -145,7 +143,7 @@ jobs:
             [
               { 
                 "title": "Status",
-                "value": "*Failed!*",
+                "value": "Failed!",
                 "short": true
               },
               {
