@@ -21,7 +21,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: github.event_name != 'workflow_call' || inputs.check-type == 'python'
+    if: inputs.check-type == '' || inputs.check-type == 'python'
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.9
@@ -53,7 +53,7 @@ jobs:
           python openapi_main.py --schema_file "resources/openapi/openapi.yaml" --target_schema "lunch" --check_files "resources/json/test-openapi-lunch.json"
   php:
     runs-on: ubuntu-latest
-    if: github.event_name != 'workflow_call' || inputs.check-type == 'php'
+    if: inputs.check-type == '' || inputs.check-type == 'php'
     steps:
       - uses: actions/checkout@v3
       - uses: shivammathur/setup-php@v2
@@ -78,7 +78,7 @@ jobs:
 
   check-updated_files:
     runs-on: ubuntu-latest
-    if: github.event_name != 'workflow_call'
+    if: inputs.check-type == ''
     timeout-minutes: 3
     steps:
       - name: Show event
