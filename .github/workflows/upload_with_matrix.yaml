@@ -22,7 +22,7 @@ on:
 jobs:
   validation:
     name: Validation
-    uses: ./.github/workflows/python.yml@main
+    uses: ./.github/workflows/python.yml
     with:
       check-type: 'python'
   check-target:
