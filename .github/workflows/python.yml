@@ -15,7 +15,7 @@ jobs:
     steps:
       - run: echo $event | jq
         env:
-          event: ${{github.event}}
+          event: ${{fromJson(github.event)}}
           event_path: ${{github.event_path}}
           event_name: ${{github.event_name}}
   build:
