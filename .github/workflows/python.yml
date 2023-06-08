@@ -13,11 +13,12 @@ jobs:
   check-event:
     runs-on: ubuntu-latest
     steps:
-      - run: echo $event | jq
+      - run: echo "hello ${{inputs.check-type}}"
         env:
           event: ${{toJson(github.event)}}
           event_path: ${{github.event_path}}
           event_name: ${{github.event_name}}
+
   build:
     runs-on: ubuntu-latest
     if: github.event_name != 'workflow_call' || inputs.check-type == 'python'
