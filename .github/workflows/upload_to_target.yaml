@@ -31,7 +31,7 @@ jobs:
 
   v2:
     name: Validation2
-    uses: ./.github/workflows/callable.yml
+    uses: ./.github/workflows/callable.yaml
     with:
       name: 'Global Me'
 
