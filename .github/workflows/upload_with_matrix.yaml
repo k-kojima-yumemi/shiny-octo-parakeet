@@ -25,6 +25,13 @@ jobs:
     uses: ./.github/workflows/python.yml
     with:
       check-type: 'python'
+  v2:
+    name: Validation2
+    uses: ./.github/workflows/callable.yml
+    with:
+      name: 'Me'
+    secrets:
+      token: 'token'
   check-target:
     runs-on: ubuntu-latest
     outputs:
