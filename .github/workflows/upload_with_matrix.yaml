@@ -84,6 +84,11 @@ jobs:
         run: |
           echo ${{ env.DELETE_ARG }} "Upload config to S3!"
           echo "New line"
+      - name: Echo matrix
+        run: echo $matrix | jq
+        env:
+          matrix: ${{ toJSON(matrix) }}
+
   notification:
     runs-on: ubuntu-latest
     timeout-minutes: 3
