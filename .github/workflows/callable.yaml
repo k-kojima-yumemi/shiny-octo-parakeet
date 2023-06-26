@@ -15,3 +15,5 @@ jobs:
             - run: echo ${{inputs.name}}
             - name: Secret
               run: echo ${{secrets.token}}
+            - name: Workflow
+              run: echo ${{github.workflow}}
